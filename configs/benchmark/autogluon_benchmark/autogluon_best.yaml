@@ -1,0 +1,23 @@
+seeds: [42, 15, 322]
+
+datasets:
+  - hospital
+  - m4_hourly
+  - nn5
+  - electricity
+  - covid_deaths
+  - m3_quarterly
+  - tourism_quarterly
+  - m3_other
+  - tourism_monthly
+  - m4_weekly
+  - m3_monthly
+
+models:
+  autogluon: 
+    - key: presets
+      values: [best_quality]
+    - key: run_time
+      values: [21600]
+    - key: eval_metric
+      values: [MASE] # AVAILABLE_METRICS = ["MASE", "MAPE", "sMAPE", "mean_wQuantileLoss", "MSE", "RMSE"]
