@@ -5,13 +5,13 @@ datasets:
   - m4_hourly
   - nn5
   - electricity
-  # - covid_deaths
-  # - m3_quarterly
-  # - tourism_quarterly
-  # - m3_other
-  # - tourism_monthly
-  # - m4_weekly
-  # - m3_monthly
+  - covid_deaths
+  - m3_quarterly
+  - tourism_quarterly
+  - m3_other
+  - tourism_monthly
+  - m4_weekly
+  - m3_monthly
 
 models:
   autogluon: 
