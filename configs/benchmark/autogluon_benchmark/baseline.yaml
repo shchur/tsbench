@@ -1,4 +1,4 @@
-seeds: [42, 137, 69, 720, 24]
+seeds: [42, 15, 322]
 
 datasets:
   - covid_deaths
