@@ -1,5 +1,6 @@
 from typing import Iterator, Optional
 
+from distutils.dir_util import copy_tree
 import json
 from pathlib import Path
 import os
@@ -86,6 +87,9 @@ class AutoGluonPredictor(Predictor):
 
     def serialize(self, path: Path) -> None:
         self.predictor.save()
+        original_path = self.predictor._learner.path
+        copy_tree(original_path, str(path))
+        print(f"Saved trained model to {path}")
         file = path / "metadata.pickle"
         with file.open("w") as f:
             json.dump(
