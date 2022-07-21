@@ -1,17 +1,45 @@
-seeds: [42, 15, 322]
+seeds: [42]
 
 datasets:
-  - hospital
-  - m4_hourly
-  - nn5
-  - electricity
-  - covid_deaths
-  - m3_quarterly
-  - tourism_quarterly
-  - m3_other
-  - tourism_monthly
-  - m4_weekly
-  - m3_monthly
+- australian_electricity_demand
+- bitcoin
+- car_parts
+- cif_2016
+- covid_deaths
+- dominick
+- electricity
+- exchange_rate
+- fred_md
+- hospital
+- kdd_2018
+- london_smart_meters
+- m1_monthly
+- m1_quarterly
+- m1_yearly
+- m3_monthly
+- m3_other
+- m3_quarterly
+- m3_yearly
+- m4_daily
+- m4_hourly
+- m4_monthly
+- m4_quarterly
+- m4_weekly
+- m4_yearly
+- nn5
+- pedestrian_count
+- rideshare
+- san_francisco_traffic
+- solar
+- taxi
+- temperature_rain
+- tourism_monthly
+- tourism_quarterly
+- tourism_yearly
+- vehicle_trips
+- weather
+- wiki
+- wind_farms
 
 models:
   autogluon: 
