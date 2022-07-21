@@ -6,6 +6,7 @@ echo "Downloading M5..."
 poetry run kaggle competitions download -c m5-forecasting-accuracy -p ~/.mxnet/gluon-ts/datasets/
 unzip ~/.mxnet/gluon-ts/datasets/m5-forecasting-accuracy.zip -d ~/.mxnet/gluon-ts/datasets/m5
 rm -f ~/.mxnet/gluon-ts/datasets/m5-forecasting-accuracy.zip
+(cd ~/.mxnet/gluon-ts/; ln -s datasets/m5 .)
 
 # Rossmann
 echo "Downloading Rossmann..."
@@ -20,7 +21,7 @@ poetry run kaggle competitions download -c favorita-grocery-sales-forecasting \
 unzip ~/.mxnet/gluon-ts/datasets/favorita-grocery-sales-forecasting.zip \
     -d ~/.mxnet/gluon-ts/datasets/corporacion_favorita
 rm -f ~/.mxnet/gluon-ts/datasets/favorita-grocery-sales-forecasting.zip
-ls ~/.mxnet/gluon-ts/datasets/corporacion_favorita | xargs -L1 7za e
+(cd ~/.mxnet/gluon-ts/datasets/corporacion_favorita/; 7za -y x "*.7z")
 rm -f ~/.mxnet/gluon-ts/datasets/corporacion_favorita/*.7z
 
 # Restaurant
