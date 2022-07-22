@@ -176,7 +176,13 @@ class Job:
             cast(Path, self.source_path) / "forecasts" / f"model_{index:02}"
         )
 
-    def save(self, path: Path, include_forecasts: bool = False, include_leaderboard: bool = False) -> None:
+    def save(
+        self,
+        path: Path,
+        include_forecasts: bool = False,
+        include_leaderboard: bool = False,
+        include_model: bool = False,
+    ) -> None:
         """
         Stores all data associated with the training job in an auto-generated,
         unique folder within the provided directory.
@@ -247,6 +253,14 @@ class Job:
                             / "leaderboard.csv",
                             target / "leaderboard.csv",
                         )
+                if include_model:
+                    if not (artifact.path / "models").exists():
+                        print('this job has no saved model')
+                    else:
+                        # Do not save the dataset
+                        shutil.rmtree(artifact.path / "models" / "model_0" / "utils")
+                        shutil.copytree(artifact.path / "models", target / "models")
+
 
         # Finally check that saving all data worked as expected
         assert _check_all_data_available(target, include_forecasts=include_forecasts, include_leaderboard=include_leaderboard)

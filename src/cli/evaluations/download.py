@@ -58,6 +58,14 @@ from cli.evaluations._main import evaluations
     ),
 )
 @click.option(
+    "--include_model",
+    type=bool,
+    default=False,
+    help=(
+        "Whether to download the trained model."
+    ),
+)
+@click.option(
     "--evaluations_path",
     type=click.Path(),
     default=DEFAULT_EVALUATIONS_PATH,
@@ -65,7 +73,7 @@ from cli.evaluations._main import evaluations
     help="The path to which to download the evaluations to.",
 )
 def download(
-    experiment: Optional[str], include_forecasts: bool, include_leaderboard: bool, evaluations_path: str
+    experiment: Optional[str], include_forecasts: bool, include_leaderboard: bool, include_model: bool, evaluations_path: str
 ):
     """
     Downloads either the evaluations of a single AWS Sagemaker experiment or
@@ -88,7 +96,11 @@ def download(
         other_jobs = analysis.other_jobs
         process_map(
             partial(
-                _move_job, target=target, include_forecasts=include_forecasts, include_leaderboard=include_leaderboard
+                _move_job,
+                target=target,
+                include_forecasts=include_forecasts,
+                include_leaderboard=include_leaderboard,
+                include_model=include_model,
             ),
             load_jobs_from_analysis(analysis),
             chunksize=1,
@@ -172,5 +184,5 @@ def _extract_object_names(response: Dict[str, Any]) -> List[str]:
     ]
 
 
-def _move_job(job: Job, target: Path, include_forecasts: bool, include_leaderboard: bool):
-    job.save(target, include_forecasts=include_forecasts, include_leaderboard=include_leaderboard)
+def _move_job(job: Job, target: Path, include_forecasts: bool, include_leaderboard: bool, include_model: bool):
+    job.save(target, include_forecasts=include_forecasts, include_leaderboard=include_leaderboard, include_model=include_model)
