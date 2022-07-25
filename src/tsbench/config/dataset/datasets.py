@@ -1271,18 +1271,6 @@ class TrendDataset(ArtificialGluonTsDatasetConfig):
 
 @register_dataset
 @dataclass(frozen=True)
-class NoisyTrendDataset(ArtificialGluonTsDatasetConfig):
-    """
-    The dataset where each series contains a linear trend + Gaussian noise.
-    """
-
-    @classmethod
-    def name(cls) -> str:
-        return "artificial-noisy-trend"
-
-
-@register_dataset
-@dataclass(frozen=True)
 class SeasonalDataset(ArtificialGluonTsDatasetConfig):
     """
     Sinus time series that ramp up and reach a certain amplitude, and

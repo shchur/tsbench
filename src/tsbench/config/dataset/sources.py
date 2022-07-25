@@ -173,16 +173,9 @@ class ArtificialGluonTsDatasetConfig(GluonTsDatasetConfig):
             "artificial-trend": partial(
                 generate_artificial_dataset,
                 dataset=ConstantDataset(
-                    num_timeseries=50, num_steps=100, is_trend=True
-                ),
-            ),
-            "artificial-noisy-trend": partial(
-                generate_artificial_dataset,
-                dataset=ConstantDataset(
                     num_timeseries=50,
                     num_steps=100,
                     is_trend=True,
-                    is_noise=True,
                 ),
             ),
             "artificial-seasonal": partial(
