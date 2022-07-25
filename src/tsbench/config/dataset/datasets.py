@@ -21,6 +21,7 @@ import pandas as pd
 from ._factory import register_dataset
 from .preprocessing import ConstantTargetFilter, Filter
 from .sources import (
+    ArtificialGluonTsDatasetConfig,
     GluonTsDatasetConfig,
     KaggleDatasetConfig,
     M3DatasetConfig,
@@ -1242,3 +1243,52 @@ class RestaurantDatasetConfig(KaggleDatasetConfig):
             )
 
         return metadata, series
+
+
+@register_dataset
+@dataclass(frozen=True)
+class ConstantDataset(ArtificialGluonTsDatasetConfig):
+    """
+    The dataset where each series contains a constant value.
+    """
+
+    @classmethod
+    def name(cls) -> str:
+        return "artificial-constant"
+
+
+@register_dataset
+@dataclass(frozen=True)
+class TrendDataset(ArtificialGluonTsDatasetConfig):
+    """
+    The dataset where each series contains a linear trend.
+    """
+
+    @classmethod
+    def name(cls) -> str:
+        return "artificial-trend"
+
+
+@register_dataset
+@dataclass(frozen=True)
+class NoisyTrendDataset(ArtificialGluonTsDatasetConfig):
+    """
+    The dataset where each series contains a linear trend + Gaussian noise.
+    """
+
+    @classmethod
+    def name(cls) -> str:
+        return "artificial-noisy-trend"
+
+
+@register_dataset
+@dataclass(frozen=True)
+class SeasonalDataset(ArtificialGluonTsDatasetConfig):
+    """
+    Sinus time series that ramp up and reach a certain amplitude, and
+    level and have additional spikes on each sunday.
+    """
+
+    @classmethod
+    def name(cls) -> str:
+        return "artificial-seasonal"

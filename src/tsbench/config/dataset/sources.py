@@ -15,11 +15,20 @@ import json
 import shutil
 import tempfile
 import urllib.request as req
+from collections import OrderedDict
 from dataclasses import dataclass
+from functools import partial
 from pathlib import Path
-from typing import Any, cast, Dict, List, Tuple
+from typing import Any, cast, Dict, List, Optional, Tuple
 from zipfile import ZipFile
-from gluonts.dataset.common import MetaData
+from gluonts.dataset.artificial import (
+    ArtificialDataset,
+    ComplexSeasonalTimeSeries,
+    ConstantDataset,
+)
+from gluonts.dataset.artificial.generate_synthetic import generate_sf2
+from gluonts.dataset.common import MetaData, serialize_data_entry
+from gluonts.dataset.repository._artificial import generate_artificial_dataset
 from gluonts.dataset.repository._tsf_datasets import Dataset as MonashDataset
 from gluonts.dataset.repository._tsf_datasets import (
     save_datasets,
@@ -35,6 +44,45 @@ from tsbench.config.dataset.preprocessing.filters import (
 )
 from ._base import DatasetConfig
 from .preprocessing import Filter, read_transform_write
+
+
+def generate_artificial_dataset(
+    dataset_path: Path,
+    dataset: ArtificialDataset,
+    prediction_length: Optional[int] = None,
+) -> None:
+    dataset_path_train = dataset_path / "train"
+    dataset_path_test = dataset_path / "test"
+
+    dataset_path.mkdir(exist_ok=True)
+    dataset_path_train.mkdir(exist_ok=False)
+    dataset_path_test.mkdir(exist_ok=False)
+
+    ds = dataset.generate()
+    assert ds.test is not None
+    if prediction_length is not None:
+        ds.metadata.prediction_length = prediction_length
+
+    with (dataset_path / "metadata.json").open("w") as fp:
+        json.dump(ds.metadata.dict(), fp, indent=2, sort_keys=True)
+
+    # NOTE: Original GluonTS implementation saves dataset to train.json which
+    # breaks the rest of our data preprocessing pipeline.
+    generate_sf2(
+        filename=str(dataset_path_train / "data.json"),
+        time_series=list(map(serialize_data_entry, ds.train)),
+        is_missing=False,
+        num_missing=0,
+    )
+
+    # NOTE: Original GluonTS implementation saves dataset to test.json which
+    # breaks the rest of our data preprocessing pipeline.
+    generate_sf2(
+        filename=str(dataset_path_test / "data.json"),
+        time_series=list(map(serialize_data_entry, ds.test)),
+        is_missing=False,
+        num_missing=0,
+    )
 
 
 @dataclass(frozen=True)
@@ -107,6 +155,69 @@ class GluonTsDatasetConfig(DatasetConfig):  # pylint: disable=abstract-method
         materialize_dataset(
             self._gluonts_name, directory, regenerate=regenerate
         )
+
+
+@dataclass(frozen=True)
+class ArtificialGluonTsDatasetConfig(GluonTsDatasetConfig):
+    """
+    Configuration for artificial GluonTS datasets. These don't have a predefined recipe
+    for materialization gluonts.dataset.repository.
+    """
+
+    artificial_dataset_recipes = OrderedDict(
+        {
+            "artificial-constant": partial(
+                generate_artificial_dataset,
+                dataset=ConstantDataset(num_timeseries=50, num_steps=100),
+            ),
+            "artificial-trend": partial(
+                generate_artificial_dataset,
+                dataset=ConstantDataset(
+                    num_timeseries=50, num_steps=100, is_trend=True
+                ),
+            ),
+            "artificial-noisy-trend": partial(
+                generate_artificial_dataset,
+                dataset=ConstantDataset(
+                    num_timeseries=50,
+                    num_steps=100,
+                    is_trend=True,
+                    is_noise=True,
+                ),
+            ),
+            "artificial-seasonal": partial(
+                generate_artificial_dataset,
+                dataset=ComplexSeasonalTimeSeries(length_low=50),
+            ),
+        }
+    )
+
+    def _materialize(self, directory: Path, regenerate: bool = False) -> None:
+        """Materialize dataset given its name.
+
+        There are some bugs in the implementation of artificial datasets in
+        GluonTS, which is why we need to implement _materialize() and
+        generate_artificial_dataset from scratch here.
+        """
+        directory.mkdir(parents=True, exist_ok=True)
+        dataset_name = self.name()
+        dataset_path = directory / dataset_name
+
+        dataset_recipe = self.artificial_dataset_recipes[dataset_name]
+
+        if not dataset_path.exists() or regenerate:
+            if dataset_path.exists():
+                # If regenerating, we need to remove the directory contents
+                shutil.rmtree(dataset_path)
+                dataset_path.mkdir()
+
+            # Optionally pass prediction length to not override any non-None
+            # defaults (e.g. for M4)
+            kwargs: Dict[str, Any] = {"dataset_path": dataset_path}
+            dataset_recipe(**kwargs)
+
+    def _filters(self, prediction_length: int) -> List[Filter]:
+        return [AbsoluteValueFilter(1e18)]
 
 
 @dataclass(frozen=True)
