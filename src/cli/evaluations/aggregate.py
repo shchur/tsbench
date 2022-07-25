@@ -12,12 +12,12 @@
 # permissions and limitations under the License.
 
 import json
+import os
 from pathlib import Path
 import click
-import os
 import pandas as pd
-from tsbench.constants import DEFAULT_EVALUATIONS_PATH
 from cli.evaluations._main import evaluations
+from tsbench.constants import DEFAULT_EVALUATIONS_PATH
 
 BASELINES = ["arima", "ets", "prophet", "mqcnn"]
 

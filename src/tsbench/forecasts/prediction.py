@@ -18,9 +18,9 @@ import numpy as np
 from gluonts.dataset.common import Dataset
 from gluonts.env import env
 from gluonts.evaluation.backtest import make_evaluation_predictions
+from gluonts.itertools import maybe_len
 from gluonts.model.forecast import QuantileForecast, SampleForecast
 from gluonts.model.predictor import ParallelizedPredictor, Predictor
-from gluonts.itertools import maybe_len
 from pandas.tseries.frequencies import to_offset
 from tqdm.auto import tqdm
 from .quantile import QuantileForecasts

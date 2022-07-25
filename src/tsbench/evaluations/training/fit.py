@@ -18,13 +18,13 @@ import numpy as np
 from gluonts.model.predictor import Predictor
 from mxnet.gluon import nn
 from tsbench.config import DatasetConfig, ModelConfig, TrainConfig
+from tsbench.config.model import AutoGluonModelConfig
 from tsbench.gluonts.callbacks import (
     Callback,
     LearningRateScheduleCallback,
     ModelSaverCallback,
     ParameterCountCallback,
 )
-from tsbench.config.model import AutoGluonModelConfig
 from .evaluate import FitResult
 from .logging import log_metric
 

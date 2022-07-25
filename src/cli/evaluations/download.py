@@ -21,12 +21,13 @@ import botocore
 import click
 from tqdm.auto import tqdm
 from tqdm.contrib.concurrent import process_map
+from cli.evaluations._main import evaluations
 from tsbench.analysis.utils import run_parallel
 from tsbench.constants import DEFAULT_EVALUATIONS_PATH
 from tsbench.evaluations import aws
 from tsbench.evaluations.aws import default_session
 from tsbench.evaluations.tracking.job import Job, load_jobs_from_analysis
-from cli.evaluations._main import evaluations
+
 
 @evaluations.command(short_help="Download evaluations to your file system.")
 @click.option(

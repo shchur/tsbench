@@ -11,12 +11,11 @@
 # express or implied. See the License for the specific language governing
 # permissions and limitations under the License.
 
-from collections.abc import Iterable
 import itertools
-
-import pandas as pd
+from collections.abc import Iterable
 from pathlib import Path
 from typing import Dict, Type, TypeVar, Union
+import pandas as pd
 from tsbench.constants import DEFAULT_DATA_PATH
 from ._base import DatasetConfig
 

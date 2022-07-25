@@ -1,18 +1,14 @@
 from typing import Dict, Optional
-
-from mxnet.gluon import HybridBlock
-
 from gluonts.core.component import validated
-from gluonts.dataset.common import Dataset
-
 from gluonts.dataset.common import Dataset
 from gluonts.model.estimator import Estimator
 from gluonts.model.predictor import Predictor
 from gluonts.transform import Transformation
-
+from mxnet.gluon import HybridBlock
 from .auto_gluon_predictor import AutoGluonPredictor
+
 try:
-    from autogluon.timeseries import TimeSeriesPredictor, TimeSeriesDataFrame
+    from autogluon.timeseries import TimeSeriesDataFrame, TimeSeriesPredictor
 except ImportError:
     TimeSeriesPredictor = None
 

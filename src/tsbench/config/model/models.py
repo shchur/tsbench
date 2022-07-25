@@ -29,10 +29,12 @@ from gluonts.model.simple_feedforward import SimpleFeedForwardEstimator
 from gluonts.model.tft import TemporalFusionTransformerEstimator
 from gluonts.mx.trainer.callback import Callback
 from gluonts.time_feature import Constant
-from tsbench.config.model.wrapper.auto_gluon_estimater import AutoGluonEstimator
 from mxnet.gluon import nn
 from tsbench.config.dataset import DatasetConfig
 from tsbench.config.dataset.datasets import WindFarmsDatasetConfig
+from tsbench.config.model.wrapper.auto_gluon_estimater import (
+    AutoGluonEstimator,
+)
 from ._base import ModelConfig, TrainConfig
 from ._factory import register_model
 

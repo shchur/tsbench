@@ -1,18 +1,15 @@
-from typing import Iterator, Optional
-
-from distutils.dir_util import copy_tree
 import json
-from pathlib import Path
 import os
-
 import warnings
-
+from distutils.dir_util import copy_tree
+from pathlib import Path
+from typing import Iterator, Optional
 from gluonts.dataset.common import Dataset
-from gluonts.model.predictor import Predictor
 from gluonts.model.forecast import QuantileForecast
+from gluonts.model.predictor import Predictor
 
 try:
-    from autogluon.timeseries import TimeSeriesPredictor, TimeSeriesDataFrame
+    from autogluon.timeseries import TimeSeriesDataFrame, TimeSeriesPredictor
 except ImportError:
     TimeSeriesPredictor = None
 
